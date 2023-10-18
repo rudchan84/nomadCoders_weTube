@@ -18,6 +18,11 @@ function handleHome(req, res, next) {
   return res.send("I love middlewares");
 }
 
+//view engine으로 pug를 설정
+app.set("view engine", "pug");
+//default views 폴더 변경
+app.set("views", "src/views");
+
 //모든 route에서 사용할 middleware(순서가 위에 있어야함, get이 먼저 실행되면 return으로 종료 되므로)
 //app.use(loggerMiddleware);
 //middleware logger로 morgan을 사용해 보자
