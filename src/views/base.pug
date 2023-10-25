@@ -1,7 +1,23 @@
 doctype html
 html(lang="ko")
   head
-    block headTitle
+    title #{pageTitle} | WeTube
+    //-개발중 조금이라도 예쁘게 MVP Styles 사용
+    link(rel="stylesheet" href="https://unpkg.com/mvp.css")
   body
-    block potato
-    include partials/footer
+    header 
+      if userPotato.loggedIn 
+        small Hello #{userPotato.username}
+      nav
+        ul 
+          if userPotato.loggedIn
+            li 
+              a(href="/login") Log out | #{userPotato.loggedIn}
+          else
+            li 
+              a(href="/login") Login | #{userPotato.loggedIn}
+      //-다른 텍스트를 섞지 않으면 이런식으로 사용 가능
+      h1=pageTitle
+    main
+      block potato
+  include partials/footer
