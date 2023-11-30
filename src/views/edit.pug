@@ -1,4 +1,10 @@
 extends base
 
 block potato 
-  h1 Video Edit~
+  h4 Change Title of Video 
+  h4 현재 제목: #{videoInfo.title}
+  //-POST를 하려면 input에 name을 줘야 한다
+  //-form에 action을 안써주면 현재 URL
+  form(method="POST")
+    input(name="title", placeholder="Video Title", value=videoInfo.title, required)
+    input(value="Save",type="submit")

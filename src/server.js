@@ -27,6 +27,9 @@ app.set("views", "src/views");
 //app.use(loggerMiddleware);
 //middleware logger로 morgan을 사용해 보자
 app.use(logger);
+//form을 이해하고 javascript object로 변환해 주는 urlencoded 미들웨어 추가(Router 위에 쓰자)
+//option 중 하나인 extended는 form body에 있는 정보를 보기좋게 해준다
+app.use(express.urlencoded({ extended: true }));
 app.use("/", globalRouter);
 app.use("/video", videoRouter);
 app.use("/user", userRouter);

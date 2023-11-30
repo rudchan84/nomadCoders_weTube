@@ -1,4 +1,7 @@
 extends base
 
 block potato 
-  h1 Watch Video~
+  h3 #{videoInfo.views} #{videoInfo.views == 1 ? "view" : "views"}
+  //-href 경로에 /edit 로 하면 localhost:4000/edit 로 가고 (absolute URL)
+  //-edit만 작성하면 /video/edit로 보내준다 (relative URL)
+  a(href=`${videoInfo.id}/edit`) Edit Video &rarr;
