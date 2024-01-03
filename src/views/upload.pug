@@ -1,0 +1,7 @@
+extends base
+
+block potato
+  h2 Upload Video
+  form(method="POST" action="/video/upload")
+    input(placeholder="Input Title", required, type="text" name="uploadVideoTitle")
+    input(type="submit", value="Upload Video")

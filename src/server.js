@@ -1,3 +1,5 @@
+import "./db"; //db.js 파일 import: DB연결 (mongoose)
+import "./models/video"; //DB 스키마 정의 (mongoose)
 //const express = require("express");
 //babel을 이용해 최신 JS문법을 사용하자(아래로 사용)
 //express package를 express라는 이름으로 import 해 온 것

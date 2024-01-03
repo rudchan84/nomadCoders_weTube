@@ -20,11 +20,17 @@ export const getEdit = (req, res) => {
   return res.render("edit", { pageTitle: `Editing ${videoInfo.title}`, videoInfo });
 };
 export const postEdit = (req, res) => {
-  console.log(req.body); //form body
+  console.log(req.body); //form body / input 값에 name을 넣어주어야 값이 넘어온다! 중요!
   const { id } = req.params;
   const { title } = req.body;
   videos[id - 1].title = title; // DB title update
   return res.redirect(`/video/${id}`);
 };
 export const deleteVideo = (req, res) => res.send("video delete", { pageTitle: "Video Delete" });
-export const upload = (req, res) => res.send("video upload", { pageTitle: "Video Upload" });
+export const getUpload = (req, res) => res.render("upload", { pageTitle: "Video Upload" });
+export const postUpload = (req, res) => {
+  console.log(req.body);
+  videos.push({ title: req.body.uploadVideoTitle, rating: 0, comments: 0, createAt: "Just Now", views: 0, id: videos.length + 1 });
+  return res.redirect("/");
+  //return res.render("upload", { pageTitle: "Video Upload" });
+};

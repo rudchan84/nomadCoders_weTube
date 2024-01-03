@@ -1,5 +1,5 @@
 import express from "express";
-import { watch, getEdit, upload, deleteVideo, postEdit } from "../controllers/videoController";
+import { watch, getEdit, getUpload, postUpload, deleteVideo, postEdit } from "../controllers/videoController";
 
 const videoRouter = express.Router();
 
@@ -9,6 +9,6 @@ videoRouter.get("/:id(\\d+)", watch); //\d+가 숫자만 선택하게 하는 정
 //위2개를 아래로 간단화 할 수 있다
 videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
 videoRouter.get("/:id(\\d+)/delete", deleteVideo);
-videoRouter.get("/upload", upload); //upload가 변수가 되지 않게 :id보다 위에 위치
+videoRouter.route("/upload").get(getUpload).post(postUpload); //upload가 변수가 되지 않게 :id보다 위에 위치
 
 export default videoRouter;

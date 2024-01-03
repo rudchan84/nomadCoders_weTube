@@ -3,6 +3,10 @@ include mixins/video
 
 block potato 
   h2 Welcome here you will see the trending videos~
+  nav 
+    ul 
+      li
+        a(href="/video/upload") Upload a Video
   input(placeholder="Whats your name?")
   ul 
     //-each potato, idx in videos
