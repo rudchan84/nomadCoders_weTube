@@ -1,23 +1,19 @@
-let videos = [
-  { title: "First Video", rating: 5, comments: 12, createAt: "22 minutes ago", views: 95, id: 1 },
-  { title: "Second Video", rating: 4, comments: 3, createAt: "7 minutes ago", views: 23, id: 2 },
-  { title: "Third Video", rating: 3, comments: 1, createAt: "1 minutes ago", views: 2, id: 3 },
-];
-export const trending = (req, res) => {
-  return res.render("home", { pageTitle: "Home", videos: videos }); //home.pug를 유저에게 보여준다
-  //return res.render("home", { pageTitle: "Home", videos }); 이렇게 줄일 수 있다
+import Video from "../models/video";
+
+export const home = async (req, res) => {
+  const videos = await Video.find({});
+  //console.log("videos:", videos);
+  return res.render("home", { pageTitle: "Home", videos }); //home.pug를 유저에게 보여준다
 };
 export const watch = (req, res) => {
   //console.log(req.params); //url에 id변수가 있으니 params를 찍어볼 수 있다
   const { id } = req.params; //ES6 최신문법(아래와같음)
   //  const id = req.params.id;
-  const videoInfo = videos[id - 1]; //비디오 id로 정보를 가져온다
-  return res.render("watch", { pageTitle: `Watching ${videoInfo.title}`, videoInfo });
+  return res.render("watch", { pageTitle: `Watching` });
 };
 export const getEdit = (req, res) => {
   const { id } = req.params;
-  const videoInfo = videos[id - 1]; //비디오 id로 정보를 가져온다
-  return res.render("edit", { pageTitle: `Editing ${videoInfo.title}`, videoInfo });
+  return res.render("edit", { pageTitle: `Editing` });
 };
 export const postEdit = (req, res) => {
   console.log(req.body); //form body / input 값에 name을 넣어주어야 값이 넘어온다! 중요!
@@ -28,9 +24,33 @@ export const postEdit = (req, res) => {
 };
 export const deleteVideo = (req, res) => res.send("video delete", { pageTitle: "Video Delete" });
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Video Upload" });
-export const postUpload = (req, res) => {
-  console.log(req.body);
-  videos.push({ title: req.body.uploadVideoTitle, rating: 0, comments: 0, createAt: "Just Now", views: 0, id: videos.length + 1 });
+export const postUpload = async (req, res) => {
+  //console.log(req.body);
+  const { title = req.body.uploadVideoTitle, description, hashtags } = req.body;
+  //console.log(title, description, hashtags);
+  const video = new Video({
+    title, // = title: title
+    description,
+    //createdAt: Date.now(),
+    hashtags: hashtags.split(",").map((potato) => `#${potato}`),
+    meta: { views: 0, rating: 0 },
+  });
+  try {
+    await video.save();
+  } catch (error) {
+    // console.log(error);
+    return res.render("upload", { pageTitle: "Video Upload", errorMessage: error._message });
+  }
+  /*
+  위의 new object 생성 후 save하는 부분을 아래와 같이 사용할 수 있다
+  await Video.create({
+    title, // = title: title
+    description,
+    createdAt: Date.now(),
+    hashtags: hashtags.split(",").map((potato) => `#${potato}`),
+    meta: { views: 0, rating: 0 },
+  })
+   */
   return res.redirect("/");
   //return res.render("upload", { pageTitle: "Video Upload" });
 };

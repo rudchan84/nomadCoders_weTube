@@ -2,6 +2,10 @@ extends base
 
 block potato
   h2 Upload Video
-  form(method="POST" action="/video/upload")
-    input(placeholder="Input Title", required, type="text" name="uploadVideoTitle")
+  if errorMessage 
+    span=errorMessage
+  form(method="POST")
+    input(placeholder="Title", required, type="text" name="uploadVideoTitle")
+    input(placeholder="Description", required, type="text" name="description")
+    input(placeholder="Hashtags, separated by comma.", required, type="text" name="hashtags")
     input(type="submit", value="Upload Video")
