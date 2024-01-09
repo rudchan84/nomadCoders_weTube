@@ -10,20 +10,35 @@ export const watch = async (req, res) => {
   const { id } = req.params; //ES6 최신문법(아래와같음)
   // const id = req.params.id;
   const videoInfo = await Video.findById(id);
+  if (!videoInfo) {
+    return res.render("404", { pageTitle: "Video not found" });
+  }
   return res.render("watch", { pageTitle: videoInfo.title, videoInfo });
 };
+
 export const getEdit = async (req, res) => {
   const { id } = req.params;
   const videoInfo = await Video.findById(id);
-  return res.render("edit", { pageTitle: `Editing`, videoInfo });
+  if (!videoInfo) {
+    return res.render("404", { pageTitle: "Video not found" });
+  }
+  return res.render("edit", { pageTitle: `Edit ${videoInfo.title}`, videoInfo });
 };
-export const postEdit = (req, res) => {
-  console.log(req.body); //form body / input 값에 name을 넣어주어야 값이 넘어온다! 중요!
+export const postEdit = async (req, res) => {
+  //console.log(req.body); //form body / input 값에 name을 넣어주어야 값이 넘어온다! 중요!
   const { id } = req.params;
-  const { title } = req.body;
-  videos[id - 1].title = title; // DB title update
+  const { title, description, hashtags } = req.body;
+  const videoInfo = await Video.findById(id);
+  if (!videoInfo) {
+    return res.render("404", { pageTitle: "Video not found" });
+  }
+  videoInfo.title = title;
+  videoInfo.description = description;
+  videoInfo.hashtags = hashtags.split(",").map((potato) => (potato.startsWith("#") ? potato : `#${potato}`));
+  await videoInfo.save();
   return res.redirect(`/video/${id}`);
 };
+
 export const deleteVideo = (req, res) => res.send("video delete", { pageTitle: "Video Delete" });
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Video Upload" });
 export const postUpload = async (req, res) => {
@@ -34,7 +49,7 @@ export const postUpload = async (req, res) => {
     title, // = title: title
     description,
     //createdAt: Date.now(),
-    hashtags: hashtags.split(",").map((potato) => `#${potato}`),
+    hashtags: hashtags.split(",").map((potato) => (potato.startsWith("#") ? potato : `#${potato}`)),
   });
   try {
     await video.save();

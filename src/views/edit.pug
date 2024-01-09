@@ -1,10 +1,12 @@
 extends base
 
 block potato 
-  h4 Change Title of Video 
+  h4 Update Video 
   h4 현재 제목: #{videoInfo.title}
   //-POST를 하려면 input에 name을 줘야 한다
   //-form에 action을 안써주면 현재 URL
   form(method="POST")
-    input(name="title", placeholder="Video Title", value=videoInfo.title, required)
+    input(name="title", placeholder="Video Title", value=videoInfo.title, required, maxlength=80)
+    input(name="description", placeholder="Description", value=videoInfo.description, required, type="text" minlength=20)
+    input( name="hashtags", placeholder="Hashtags, separated by comma.", value=videoInfo.hashtags.join(), required, type="text")
     input(value="Save",type="submit")
