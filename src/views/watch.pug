@@ -1,7 +1,12 @@
 extends base
 
 block potato 
-  h3 #{videoInfo.views} #{videoInfo.views == 1 ? "view" : "views"}
+  h3 제목: #{videoInfo.title}
+  p 설명: #{videoInfo.description}
+  div
+    small=videoInfo.createdAt.toLocaleString()
+    br
+    small #{videoInfo.meta.views} #{videoInfo.meta.views <= 1 ? "view" : "views"}
   //-href 경로에 /edit 로 하면 localhost:4000/edit 로 가고 (absolute URL)
   //-edit만 작성하면 /video/edit로 보내준다 (relative URL)
   a(href=`${videoInfo.id}/edit`) Edit Video &rarr;

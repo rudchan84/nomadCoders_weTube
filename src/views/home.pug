@@ -8,15 +8,14 @@ block potato
       li
         a(href="/video/upload") Upload a Video
   input(placeholder="Whats your name?")
-  ul 
-    //-each potato, idx in videos
-      //-li video number #{idx} : #{potato.title}
-    //-else 
-      //-li Sorry nothing found
-    //-iteration
-    each potato, idx in videos 
-      //-mixin 사용하기
-      +video(potato, idx) 
-      //-array가 비어있으면 아래로
-    else 
-      div Sorry nothing found
+  //-each potato, idx in videos
+    //-li video number #{idx} : #{potato.title}
+  //-else 
+    //-li Sorry nothing found
+  //-iteration
+  each potato, idx in videos 
+    //-mixin 사용하기
+    +video(potato, idx) 
+    //-array가 비어있으면 아래로
+  else 
+    div Sorry nothing found

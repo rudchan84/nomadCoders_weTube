@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 const videoSchema = new mongoose.Schema({
-  title: String, //-title: {type:String} 을 줄여 놓은 것
-  description: String,
-  createdAt: { type: Date, required: true },
-  hashtags: [{ type: String }],
+  title: { type: String, required: true, trim: true }, //-title: {type:String} 을 줄여 놓은 것
+  description: { type: String, required: true, trim: true },
+  createdAt: { type: Date, required: true, default: Date.now },
+  hashtags: [{ type: String, trim: true }],
   meta: {
-    views: Number,
-    rating: Number,
+    views: { type: Number, default: 0 },
+    rating: { type: Number, default: 0 },
   },
 });
 

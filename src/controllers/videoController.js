@@ -5,15 +5,17 @@ export const home = async (req, res) => {
   //console.log("videos:", videos);
   return res.render("home", { pageTitle: "Home", videos }); //home.pug를 유저에게 보여준다
 };
-export const watch = (req, res) => {
-  //console.log(req.params); //url에 id변수가 있으니 params를 찍어볼 수 있다
+export const watch = async (req, res) => {
+  console.log(req.params); //url에 id변수가 있으니 params를 찍어볼 수 있다
   const { id } = req.params; //ES6 최신문법(아래와같음)
-  //  const id = req.params.id;
-  return res.render("watch", { pageTitle: `Watching` });
+  // const id = req.params.id;
+  const videoInfo = await Video.findById(id);
+  return res.render("watch", { pageTitle: videoInfo.title, videoInfo });
 };
-export const getEdit = (req, res) => {
+export const getEdit = async (req, res) => {
   const { id } = req.params;
-  return res.render("edit", { pageTitle: `Editing` });
+  const videoInfo = await Video.findById(id);
+  return res.render("edit", { pageTitle: `Editing`, videoInfo });
 };
 export const postEdit = (req, res) => {
   console.log(req.body); //form body / input 값에 name을 넣어주어야 값이 넘어온다! 중요!
@@ -33,7 +35,6 @@ export const postUpload = async (req, res) => {
     description,
     //createdAt: Date.now(),
     hashtags: hashtags.split(",").map((potato) => `#${potato}`),
-    meta: { views: 0, rating: 0 },
   });
   try {
     await video.save();
@@ -46,9 +47,8 @@ export const postUpload = async (req, res) => {
   await Video.create({
     title, // = title: title
     description,
-    createdAt: Date.now(),
+    // createdAt: Date.now(),
     hashtags: hashtags.split(",").map((potato) => `#${potato}`),
-    meta: { views: 0, rating: 0 },
   })
    */
   return res.redirect("/");
