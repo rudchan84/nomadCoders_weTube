@@ -4,4 +4,6 @@ mixin video(info, idx)
       a(href=`/video/${info.id}`)=info.title
     p=info.description
     small=info.createdAt.toLocaleString()
+    br
+    small=info.hashtags
     hr

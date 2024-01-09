@@ -28,18 +28,20 @@ export const postEdit = async (req, res) => {
   //console.log(req.body); //form body / input 값에 name을 넣어주어야 값이 넘어온다! 중요!
   const { id } = req.params;
   const { title, description, hashtags } = req.body;
-  const videoInfo = await Video.findById(id);
+  const videoInfo = await Video.exists({ _id: id });
   if (!videoInfo) {
     return res.render("404", { pageTitle: "Video not found" });
   }
-  videoInfo.title = title;
-  videoInfo.description = description;
-  videoInfo.hashtags = hashtags.split(",").map((potato) => (potato.startsWith("#") ? potato : `#${potato}`));
-  await videoInfo.save();
+  await Video.findByIdAndUpdate(id, {
+    title, // = title:title
+    description,
+    hashtags: makeHashtags(hashtags),
+  });
   return res.redirect(`/video/${id}`);
 };
 
 export const deleteVideo = (req, res) => res.send("video delete", { pageTitle: "Video Delete" });
+
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Video Upload" });
 export const postUpload = async (req, res) => {
   //console.log(req.body);
@@ -49,12 +51,12 @@ export const postUpload = async (req, res) => {
     title, // = title: title
     description,
     //createdAt: Date.now(),
-    hashtags: hashtags.split(",").map((potato) => (potato.startsWith("#") ? potato : `#${potato}`)),
+    hashtags,
   });
   try {
     await video.save();
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return res.render("upload", { pageTitle: "Video Upload", errorMessage: error._message });
   }
   /*
