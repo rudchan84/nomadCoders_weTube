@@ -1,4 +1,4 @@
-import Video from "../models/video";
+import Video /*, { makeHashtags }*/ from "../models/video";
 
 export const home = async (req, res) => {
   const videos = await Video.find({});
@@ -35,12 +35,16 @@ export const postEdit = async (req, res) => {
   await Video.findByIdAndUpdate(id, {
     title, // = title:title
     description,
-    hashtags: makeHashtags(hashtags),
+    hashtags: Video.formatHashtags(hashtags),
   });
   return res.redirect(`/video/${id}`);
 };
 
-export const deleteVideo = (req, res) => res.send("video delete", { pageTitle: "Video Delete" });
+export const deleteVideo = async (req, res) => {
+  const { id } = req.params;
+  await Video.findByIdAndDelete(id);
+  return res.redirect("/");
+};
 
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Video Upload" });
 export const postUpload = async (req, res) => {
@@ -51,12 +55,12 @@ export const postUpload = async (req, res) => {
     title, // = title: title
     description,
     //createdAt: Date.now(),
-    hashtags,
+    hashtags: Video.formatHashtags(hashtags),
   });
   try {
     await video.save();
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.render("upload", { pageTitle: "Video Upload", errorMessage: error._message });
   }
   /*
