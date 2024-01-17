@@ -1,0 +1,12 @@
+extends base
+include mixins/video
+
+block potato 
+  form(method="GET")
+    input(name="searchTitle" placeholder="Search by title" type="text")
+    button 검색
+    
+  div
+    each potato, idx in videos 
+      //-mixin 사용하기
+      +video(potato, idx) 
