@@ -4,7 +4,7 @@
 //nodeJS와 npm이 알아서 node_modules에서 express의 index.js를 찾아서 가지고 옴
 import express from "express";
 import morgan from "morgan";
-import globalRouter from "./routers/globalRouter";
+import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
 
@@ -28,7 +28,7 @@ app.use(logger);
 //form을 이해하고 javascript object로 변환해 주는 urlencoded 미들웨어 추가(Router 위에 쓰자)
 //option 중 하나인 extended는 form body에 있는 정보를 보기좋게 해준다
 app.use(express.urlencoded({ extended: true }));
-app.use("/", globalRouter);
+app.use("/", rootRouter);
 app.use("/video", videoRouter);
 app.use("/user", userRouter);
 
