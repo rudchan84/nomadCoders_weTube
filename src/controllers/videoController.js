@@ -24,7 +24,7 @@ export const getEdit = async (req, res) => {
   const { id } = req.params;
   const videoInfo = await Video.findById(id);
   if (!videoInfo) {
-    return res.render("404", { pageTitle: "Video not found" });
+    return res.status(404).render("404", { pageTitle: "Video not found" });
   }
   return res.render("edit", { pageTitle: `Edit ${videoInfo.title}`, videoInfo });
 };
@@ -34,7 +34,7 @@ export const postEdit = async (req, res) => {
   const { title, description, hashtags } = req.body;
   const videoInfo = await Video.exists({ _id: id });
   if (!videoInfo) {
-    return res.render("404", { pageTitle: "Video not found" });
+    return res.status(404).render("404", { pageTitle: "Video not found" });
   }
   await Video.findByIdAndUpdate(id, {
     title, // = title:title
@@ -67,7 +67,7 @@ export const postUpload = async (req, res) => {
     await video.save();
   } catch (error) {
     // console.log(error);
-    return res.render("upload", { pageTitle: "Video Upload", errorMessage: error.errors.description });
+    return res.status(400).render("upload", { pageTitle: "Video Upload", errorMessage: error.errors.description });
   }
   /*
   위의 new object 생성 후 save하는 부분을 아래와 같이 사용할 수 있다
