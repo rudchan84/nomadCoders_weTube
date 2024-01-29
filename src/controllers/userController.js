@@ -50,6 +50,8 @@ export const postLogin = async (req, res) => {
   if (!loginSuccess) {
     return res.status(400).render("login", { pageTitle: "Log In", errorMessage: "비밀번호가 틀립니다" });
   }
+  req.session.loggedIn = true;
+  req.session.user = userInfo;
   res.redirect("/");
 };
 

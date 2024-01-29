@@ -4,9 +4,11 @@
 //nodeJS와 npm이 알아서 node_modules에서 express의 index.js를 찾아서 가지고 옴
 import express from "express";
 import morgan from "morgan";
+import session from "express-session";
 import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
+import { localsMiddleware } from "./middlewares";
 
 //다음 express 어플리케이션 생성
 const app = express();
@@ -28,6 +30,24 @@ app.use(logger);
 //form을 이해하고 javascript object로 변환해 주는 urlencoded 미들웨어 추가(Router 위에 쓰자)
 //option 중 하나인 extended는 form body에 있는 정보를 보기좋게 해준다
 app.use(express.urlencoded({ extended: true }));
+
+//Router 앞에 session을 넣어 줘야 한다
+app.use(session({ secret: "Hello!", resave: true, saveUninitialized: true }));
+
+app.use((req, res, next) => {
+  //이 미들웨어를 Router 위에 위치 시킨다면
+  //PUG는 res.locals로 접근이 가능하며 단순히 potato 변수로 호출 가능하다!
+  //middlewares.js 파일로 옮기자
+  /*res.locals.potato = "eat";
+  //아래를 통해 백엔드에 접속했던 모든 세션을 볼 수 있다
+  req.sessionStore.all((error, sessions) => {
+    console.log(sessions);
+    next();
+  });*/
+  next();
+});
+
+app.use(localsMiddleware);
 app.use("/", rootRouter);
 app.use("/video", videoRouter);
 app.use("/user", userRouter);

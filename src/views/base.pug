@@ -2,7 +2,7 @@ doctype html
 html(lang="ko")
   head
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title #{pageTitle} | WeTube
+    title #{pageTitle} | #{siteName}
     //-개발중 조금이라도 예쁘게 MVP Styles 사용
     link(rel="stylesheet" href="https://unpkg.com/mvp.css")
   body
@@ -17,8 +17,16 @@ html(lang="ko")
             a(href="/") Home
           li 
             a(href="/search") Search
-          li 
-            a(href="/join") Join
+          if loggedIn
+            li 
+              a(href="/logout") Log Out
+            li 
+              a(href="/my-profile") #{loggedInUser.username} 님의 Profile
+          else
+            li 
+              a(href="/login") Login
+            li 
+              a(href="/join") Join
     main
       block potato
   include partials/footer
