@@ -5,6 +5,7 @@
 import express from "express";
 import morgan from "morgan";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
@@ -32,7 +33,11 @@ app.use(logger);
 app.use(express.urlencoded({ extended: true }));
 
 //Router 앞에 session을 넣어 줘야 한다
-app.use(session({ secret: "Hello!", resave: true, saveUninitialized: true }));
+app.use(
+  session({ secret: process.env.COOKIE_SECRET, resave: false, saveUninitialized: false, store: MongoStore.create({ mongoUrl: process.env.DB_URL }) })
+  //아래로도 사용할 수 있다 mongoose와 mongodb가 연결되어 있기 때문에
+  //app.use(session({ secret: "Hello!", resave: true, saveUninitialized: true, store: MongoStore.create({ client: connection.client }) }));
+);
 
 app.use((req, res, next) => {
   //이 미들웨어를 Router 위에 위치 시킨다면
