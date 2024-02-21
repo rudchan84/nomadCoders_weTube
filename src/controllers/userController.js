@@ -55,6 +55,72 @@ export const postLogin = async (req, res) => {
   res.redirect("/");
 };
 
+//gitHub Login
+export const startGithubLogin = (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/authorize";
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    allow_signup: false,
+    scope: "read:user user:email",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+
+export const finishGithubLogin = async (req, res) => {
+  //fetch.then을 사용하면 then > then then then fetch then 뭐 이런 식으로 계속 안으로 들어가게 되어 코드가 복잡해진다
+  //아래 처럼 깔끔하게 사용하자
+  const baseUrl = "https://github.com/login/oauth/access_token";
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    client_secret: process.env.GH_SECRET,
+    code: req.query.code, //gitHub 가 준 최초 코드
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  //access token을 받아오자
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json", //json으로 받으려면 입력해야 함
+      },
+    })
+  ).json();
+
+  //token을 던져주고 유저정보를 받아오자
+  if ("access_token" in tokenRequest) {
+    const baseUrl = "https://api.github.com";
+    const userData = await (
+      await fetch(`${baseUrl}/user`, {
+        headers: {
+          Authorization: `bearer ${tokenRequest.access_token}`,
+        },
+      })
+    ).json();
+    //email data를 숨긴 유저는 아래에서 따로 받아 와야함
+    const emailData = await (
+      await fetch(`${baseUrl}/user/emails`, {
+        headers: {
+          Authorization: `bearer ${tokenRequest.access_token}`,
+        },
+      })
+    ).json();
+    //primary true, verified true 인 이메일만 가져오기
+    const email = emailData.find((email) => email.primary === true && email.verified === true);
+    if (!email) {
+      res.redirect("/login");
+    }
+    console.log(userData);
+    console.log(email);
+    res.send(email);
+  } else {
+    console.log(tokenRequest);
+    res.redirect("/login");
+  }
+};
+
 export const edit = (req, res) => res.send("edit user");
 export const remove = (req, res) => res.send("remove user");
 export const logout = (req, res) => res.send("logout");
